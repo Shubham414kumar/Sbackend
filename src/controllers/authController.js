@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res) => {
     try {
-        const { name, email, password, role, class: studentClass, examGoal } = req.body;
+        const { name, email, password, role, class: studentClass, examGoal, examCategory } = req.body;
 
         let user = await User.findOne({ email });
         if (user) {
@@ -20,7 +20,8 @@ exports.signup = async (req, res) => {
             password: hashedPassword,
             role,
             class: studentClass,
-            examGoal
+            examGoal,
+            examCategory
         });
 
         await user.save();
@@ -37,7 +38,7 @@ exports.signup = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory } });
             }
         );
     } catch (err) {
@@ -72,7 +73,7 @@ exports.login = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory } });
             }
         );
     } catch (err) {
@@ -96,11 +97,12 @@ exports.getProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const { class: studentClass, examGoal, name } = req.body;
+        const { class: studentClass, examGoal, examCategory, name } = req.body;
         const updateFields = {};
 
         if (studentClass) updateFields.class = studentClass;
         if (examGoal) updateFields.examGoal = examGoal;
+        if (examCategory) updateFields.examCategory = examCategory;
         if (name) updateFields.name = name;
 
         const user = await User.findByIdAndUpdate(

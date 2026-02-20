@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getComments, addComment, toggleLike, deleteComment } = require('../controllers/commentController');
-const auth = require('../middleware/auth'); // Assuming auth middleware exists
+const auth = require('../middleware/authMiddleware');
 
 router.get('/', getComments);
 router.post('/', auth, addComment);
