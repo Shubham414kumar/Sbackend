@@ -24,7 +24,7 @@ const CourseSchema = new mongoose.Schema({
     },
     instructor: {
         type: String,
-        default: 'Vidyalaya Team',
+        default: 'SaarthiPrep Team',
     },
     price: {
         type: Number,

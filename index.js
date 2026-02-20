@@ -60,11 +60,11 @@ app.use('/api/comments', require('./src/routes/commentRoutes'));
 app.use('/api/current-affairs', require('./src/routes/currentAffairRoutes'));
 
 app.get('/', (req, res) => {
-  res.send('Vidyalaya API is running');
+  res.send('SaarthiPrep API is running');
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/vidyalaya')
+mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/saarthiprep')
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
