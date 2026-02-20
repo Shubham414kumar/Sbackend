@@ -1,0 +1,74 @@
+const Book = require('../models/Book');
+const Syllabus = require('../models/Syllabus');
+const PYQ = require('../models/PYQ');
+
+// --- Books ---
+exports.getBooks = async (req, res) => {
+    try {
+        const { class: studentClass, subject } = req.query;
+        let query = {};
+        if (studentClass) query.class = studentClass;
+        if (subject) query.subject = subject;
+
+        const books = await Book.find(query);
+        res.json(books);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.createBook = async (req, res) => {
+    try {
+        const book = new Book(req.body);
+        await book.save();
+        res.status(201).json(book);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
+// --- Syllabus ---
+exports.getSyllabus = async (req, res) => {
+    try {
+        const { examGoal } = req.query;
+        const syllabus = await Syllabus.find({ examGoal });
+        res.json(syllabus);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.createSyllabus = async (req, res) => {
+    try {
+        const syllabus = new Syllabus(req.body);
+        await syllabus.save();
+        res.status(201).json(syllabus);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
+// --- PYQs ---
+exports.getPYQs = async (req, res) => {
+    try {
+        const { exam, year } = req.query;
+        let query = {};
+        if (exam) query.exam = exam;
+        if (year) query.year = year;
+
+        const pyqs = await PYQ.find(query).sort({ year: -1 });
+        res.json(pyqs);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.createPYQ = async (req, res) => {
+    try {
+        const pyq = new PYQ(req.body);
+        await pyq.save();
+        res.status(201).json(pyq);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
