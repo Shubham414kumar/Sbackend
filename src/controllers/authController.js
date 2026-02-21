@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res) => {
     try {
-        const { name, email, password, role, class: studentClass, examGoal, examCategory } = req.body;
+        const { name, email, password, role, class: studentClass, examGoal, examCategory, branch, semester } = req.body;
 
         let user = await User.findOne({ email });
         if (user) {
@@ -21,7 +21,9 @@ exports.signup = async (req, res) => {
             role,
             class: studentClass,
             examGoal,
-            examCategory
+            examCategory,
+            branch,
+            semester
         });
 
         await user.save();
@@ -38,12 +40,12 @@ exports.signup = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester } });
             }
         );
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: err.message || 'Server error' });
     }
 };
 
@@ -73,12 +75,12 @@ exports.login = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester } });
             }
         );
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: err.message || 'Server error' });
     }
 };
 
@@ -97,13 +99,15 @@ exports.getProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const { class: studentClass, examGoal, examCategory, name } = req.body;
+        const { class: studentClass, examGoal, examCategory, name, branch, semester } = req.body;
         const updateFields = {};
 
         if (studentClass) updateFields.class = studentClass;
         if (examGoal) updateFields.examGoal = examGoal;
         if (examCategory) updateFields.examCategory = examCategory;
         if (name) updateFields.name = name;
+        if (branch) updateFields.branch = branch;
+        if (semester) updateFields.semester = semester;
 
         const user = await User.findByIdAndUpdate(
             req.user.id,

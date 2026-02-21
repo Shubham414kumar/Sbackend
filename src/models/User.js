@@ -30,7 +30,15 @@ const UserSchema = new mongoose.Schema({
     },
     examCategory: {
         type: String,
-        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET'],
+        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET', 'Engineering (BEU)'],
+        required: false,
+    },
+    branch: {
+        type: String,
+        required: false,
+    },
+    semester: {
+        type: String,
         required: false,
     },
     xp: { type: Number, default: 0 },
