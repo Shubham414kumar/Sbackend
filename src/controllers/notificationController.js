@@ -1,4 +1,5 @@
 const PushToken = require('../models/PushToken');
+const NotificationLog = require('../models/NotificationLog');
 
 // Register or update push token
 exports.registerToken = async (req, res) => {
@@ -94,6 +95,27 @@ exports.sendNotification = async (req, res) => {
         }
 
         res.json({ message: `Notifications sent to ${totalSent} devices`, sent: totalSent });
+
+        // Log the notification to DB after pushing
+        const logEntry = new NotificationLog({
+            title,
+            body,
+            examCategory: examCategory || 'All',
+            alertType,
+            devices: totalSent
+        });
+        await logEntry.save();
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// Get notification history (admin)
+exports.getHistory = async (req, res) => {
+    try {
+        const history = await NotificationLog.find().sort({ sentAt: -1 }).limit(50);
+        res.json(history);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

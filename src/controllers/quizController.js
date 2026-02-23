@@ -33,6 +33,16 @@ exports.createQuiz = async (req, res) => {
     }
 };
 
+exports.deleteQuiz = async (req, res) => {
+    try {
+        const quiz = await Quiz.findByIdAndDelete(req.params.id);
+        if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
+        res.json({ message: 'Quiz deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 exports.submitQuiz = async (req, res) => {
     try {
         const { quizId, answers } = req.body; // answers: { questionId: selectedOptionIndex }

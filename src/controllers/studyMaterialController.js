@@ -27,6 +27,15 @@ exports.createBook = async (req, res) => {
     }
 };
 
+exports.deleteBook = async (req, res) => {
+    try {
+        await Book.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Book deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 // --- Syllabus ---
 exports.getSyllabus = async (req, res) => {
     try {
@@ -45,6 +54,15 @@ exports.createSyllabus = async (req, res) => {
         res.status(201).json(syllabus);
     } catch (err) {
         res.status(400).json({ message: err.message });
+    }
+};
+
+exports.deleteSyllabus = async (req, res) => {
+    try {
+        await Syllabus.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Syllabus deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
 
@@ -70,5 +88,14 @@ exports.createPYQ = async (req, res) => {
         res.status(201).json(pyq);
     } catch (err) {
         res.status(400).json({ message: err.message });
+    }
+};
+
+exports.deletePYQ = async (req, res) => {
+    try {
+        await PYQ.findByIdAndDelete(req.params.id);
+        res.json({ message: 'PYQ deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
