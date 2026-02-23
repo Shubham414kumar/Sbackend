@@ -45,3 +45,49 @@ exports.addLesson = async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 };
+
+// Update a course
+exports.updateCourse = async (req, res) => {
+    try {
+        const updatedCourse = await Course.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true }
+        );
+        if (!updatedCourse) return res.status(404).json({ message: 'Course not found' });
+        res.json(updatedCourse);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
+// Delete a course (and its lessons)
+exports.deleteCourse = async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.id);
+        if (!course) return res.status(404).json({ message: 'Course not found' });
+
+        // Delete all lessons associated with this course
+        await Lesson.deleteMany({ courseId: course._id });
+
+        // Delete the course itself
+        await Course.findByIdAndDelete(req.params.id);
+
+        res.json({ message: 'Course and associated lessons deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// Delete a single lesson
+exports.deleteLesson = async (req, res) => {
+    try {
+        const lesson = await Lesson.findById(req.params.id);
+        if (!lesson) return res.status(404).json({ message: 'Lesson not found' });
+
+        await Lesson.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Lesson deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
