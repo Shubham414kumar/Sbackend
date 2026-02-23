@@ -1,17 +1,23 @@
 const Vacancy = require('../models/Vacancy');
 
-// Get vacancies with optional examCategory filter
-exports.getVacancies = async (req, res) => {
+// Get vacancies with optional examCategory filter and pagination
+exports.getVacancies = async (req, res, next) => {
     try {
-        const { examCategory, status } = req.query;
+        const { examCategory, status, page = 1, limit = 20 } = req.query;
         let query = {};
         if (examCategory) query.examCategory = examCategory;
         if (status) query.status = status;
 
-        const vacancies = await Vacancy.find(query).sort({ createdAt: -1 });
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        const vacancies = await Vacancy.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(parseInt(limit));
+
         res.json(vacancies);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        next(err);
     }
 };
 

@@ -17,11 +17,10 @@ const CourseSchema = new mongoose.Schema({
         type: String,
         required: true, // e.g., 'Physics', 'JEE'
     },
-    class: {
+    class: [{
         type: String,
-        enum: ['9', '10', '11', '12', 'dropper'],
-        required: false,
-    },
+        enum: ['6', '7', '8', '9', '10', '11', '12', 'dropper'],
+    }],
     instructor: {
         type: String,
         default: 'SaarthiPrep Team',

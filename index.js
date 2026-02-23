@@ -64,6 +64,10 @@ app.get('/', (req, res) => {
   res.send('SaarthiPrep API is running');
 });
 
+// Global Error Handling Middleware
+const errorHandler = require('./src/middleware/errorHandler');
+app.use(errorHandler);
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/saarthiprep')
   .then(() => console.log('MongoDB Connected'))

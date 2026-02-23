@@ -4,7 +4,15 @@ const QuizSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String },
     category: { type: String, required: true }, // e.g., 'Physics', 'Full Test'
-    class: { type: String }, // Optional
+    class: [{
+        type: String,
+        enum: ['6', '7', '8', '9', '10', '11', '12', 'dropper']
+    }],
+    difficulty: {
+        type: String,
+        enum: ['Easy', 'Medium', 'Hard'],
+        default: 'Medium'
+    },
     duration: { type: Number, required: true }, // in minutes
     totalMarks: { type: Number, required: true },
     questions: [
