@@ -59,6 +59,7 @@ app.use('/api/results', require('./src/routes/resultRoutes'));
 app.use('/api/comments', require('./src/routes/commentRoutes'));
 app.use('/api/current-affairs', require('./src/routes/currentAffairRoutes'));
 app.use('/api/upload', require('./src/routes/uploadRoutes'));
+app.use('/api/analytics', require('./src/routes/analyticsRoutes'));
 app.get('/', (req, res) => {
   res.send('SaarthiPrep API is running');
 });

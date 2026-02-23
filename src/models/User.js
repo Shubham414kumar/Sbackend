@@ -43,6 +43,8 @@ const UserSchema = new mongoose.Schema({
     },
     xp: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
+    streakCount: { type: Number, default: 0 },
+    lastLoginDate: { type: Date, default: null },
     badges: [{ type: String }], // Array of badge IDs or names
     createdAt: {
         type: Date,

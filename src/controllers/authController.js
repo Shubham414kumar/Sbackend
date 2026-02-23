@@ -31,6 +31,7 @@ exports.signup = async (req, res) => {
         const payload = {
             user: {
                 id: user.id,
+                role: user.role
             },
         };
 
@@ -40,7 +41,7 @@ exports.signup = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester, xp: user.xp, level: user.level, streakCount: user.streakCount, badges: user.badges } });
             }
         );
     } catch (err) {
@@ -63,9 +64,54 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
 
+        // --- Daily Streak & XP Logic ---
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        let streakUpdated = false;
+
+        if (user.lastLoginDate) {
+            const lastLoginDate = new Date(user.lastLoginDate);
+            const startOfLastLogin = new Date(lastLoginDate.getFullYear(), lastLoginDate.getMonth(), lastLoginDate.getDate());
+
+            // Calculate difference in whole days
+            const diffTime = Math.abs(startOfToday - startOfLastLogin);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+                // Logged in exactly yesterday: Increment Streak!
+                user.streakCount = (user.streakCount || 0) + 1;
+                user.xp = (user.xp || 0) + 10; // Award 10 XP for daily login
+                streakUpdated = true;
+            } else if (diffDays > 1) {
+                // Missed a day: Reset Streak
+                user.streakCount = 1;
+                user.xp = (user.xp || 0) + 10;
+                streakUpdated = true;
+            }
+            // If diffDays === 0, they already logged in today. Do nothing.
+        } else {
+            // First ever login via this system
+            user.streakCount = 1;
+            user.xp = (user.xp || 0) + 10;
+            streakUpdated = true;
+        }
+
+        user.lastLoginDate = now;
+
+        // Level up logic check if XP was added
+        if (streakUpdated) {
+            const newLevel = 1 + Math.floor(Math.sqrt(user.xp / 100));
+            if (newLevel > user.level) user.level = newLevel;
+        }
+
+        await user.save();
+        // --- End Streak Logic ---
+
         const payload = {
             user: {
                 id: user.id,
+                role: user.role
             },
         };
 
@@ -75,7 +121,44 @@ exports.login = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester, xp: user.xp, level: user.level, streakCount: user.streakCount, badges: user.badges } });
+            }
+        );
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: err.message || 'Server error' });
+    }
+};
+
+exports.adminLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid Credentials' });
+        }
+
+        if (user.role !== 'admin') {
+            return res.status(403).json({ message: 'Access Denied: Admin role required' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid Credentials' });
+        }
+
+        const payload = {
+            user: { id: user.id, role: user.role }
+        };
+
+        jwt.sign(
+            payload,
+            process.env.JWT_SECRET || 'secret',
+            { expiresIn: '1d' },
+            (err, token) => {
+                if (err) throw err;
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
             }
         );
     } catch (err) {
