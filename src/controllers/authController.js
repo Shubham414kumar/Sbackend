@@ -6,19 +6,32 @@ exports.signup = async (req, res) => {
     try {
         const { name, email, password, role, class: studentClass, examGoal, examCategory, branch, semester } = req.body;
 
+        // Input validation
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Name, email, and password are required' });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+        }
+        // Prevent role escalation — users cannot self-assign admin
+        const safeRole = (role === 'admin') ? 'student' : (role || 'student');
+
         let user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(12);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         user = new User({
             name,
             email,
             password: hashedPassword,
-            role,
+            role: safeRole,
             class: studentClass,
             examGoal,
             examCategory,
@@ -37,7 +50,7 @@ exports.signup = async (req, res) => {
 
         jwt.sign(
             payload,
-            process.env.JWT_SECRET || 'secret',
+            process.env.JWT_SECRET,
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
@@ -46,13 +59,18 @@ exports.signup = async (req, res) => {
         );
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ message: err.message || 'Server error' });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // Input validation
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
 
         let user = await User.findOne({ email });
         if (!user) {
@@ -117,7 +135,7 @@ exports.login = async (req, res) => {
 
         jwt.sign(
             payload,
-            process.env.JWT_SECRET || 'secret',
+            process.env.JWT_SECRET,
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
@@ -126,13 +144,17 @@ exports.login = async (req, res) => {
         );
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ message: err.message || 'Server error' });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
 exports.adminLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
 
         let user = await User.findOne({ email });
         if (!user) {
@@ -154,7 +176,7 @@ exports.adminLogin = async (req, res) => {
 
         jwt.sign(
             payload,
-            process.env.JWT_SECRET || 'secret',
+            process.env.JWT_SECRET,
             { expiresIn: '1d' },
             (err, token) => {
                 if (err) throw err;
@@ -163,7 +185,7 @@ exports.adminLogin = async (req, res) => {
         );
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ message: err.message || 'Server error' });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 

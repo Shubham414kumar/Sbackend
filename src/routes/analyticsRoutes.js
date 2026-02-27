@@ -4,7 +4,7 @@ const { getDashboardStats } = require('../controllers/analyticsController');
 const auth = require('../middleware/authMiddleware');
 const adminAuth = require('../middleware/adminMiddleware');
 
-// Add adminAuth in production, keeping auth to ensure only logged in users can access
-router.get('/dashboard', auth, getDashboardStats);
+// Admin only — requires both auth + admin role
+router.get('/dashboard', auth, adminAuth, getDashboardStats);
 
 module.exports = router;

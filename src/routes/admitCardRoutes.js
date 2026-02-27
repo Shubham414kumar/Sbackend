@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { getAdmitCards, createAdmitCard, updateAdmitCard, deleteAdmitCard } = require('../controllers/admitCardController');
-// potentially add auth middleware here if needed for create/update/delete
-// const auth = require('../middleware/auth');
+const auth = require('../middleware/authMiddleware');
+const admin = require('../middleware/adminMiddleware');
 
 router.get('/', getAdmitCards);
-router.post('/', createAdmitCard); // protect this later
-router.put('/:id', updateAdmitCard); // protect this later
-router.delete('/:id', deleteAdmitCard); // protect this later
+router.post('/', auth, admin, createAdmitCard);
+router.put('/:id', auth, admin, updateAdmitCard);
+router.delete('/:id', auth, admin, deleteAdmitCard);
 
 module.exports = router;
