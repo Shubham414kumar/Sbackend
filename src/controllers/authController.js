@@ -54,7 +54,7 @@ exports.signup = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester, xp: user.xp, level: user.level, streakCount: user.streakCount, badges: user.badges } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester, profileImage: user.profileImage, xp: user.xp, level: user.level, streakCount: user.streakCount, badges: user.badges } });
             }
         );
     } catch (err) {
@@ -139,7 +139,7 @@ exports.login = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester, xp: user.xp, level: user.level, streakCount: user.streakCount, badges: user.badges } });
+                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, class: user.class, examGoal: user.examGoal, examCategory: user.examCategory, branch: user.branch, semester: user.semester, profileImage: user.profileImage, xp: user.xp, level: user.level, streakCount: user.streakCount, badges: user.badges } });
             }
         );
     } catch (err) {

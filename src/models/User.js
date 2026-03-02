@@ -41,6 +41,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    profileImage: {
+        type: String,
+        default: null,
+    },
     xp: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
     streakCount: { type: Number, default: 0 },
