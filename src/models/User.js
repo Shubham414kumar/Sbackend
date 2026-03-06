@@ -50,6 +50,8 @@ const UserSchema = new mongoose.Schema({
     streakCount: { type: Number, default: 0 },
     lastLoginDate: { type: Date, default: null },
     badges: [{ type: String }], // Array of badge IDs or names
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
     createdAt: {
         type: Date,
         default: Date.now,
