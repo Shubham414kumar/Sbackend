@@ -35,17 +35,19 @@ const generateDailyAffairs = async (req, res) => {
         
         Strictly output a JSON array of objects. Do not include markdown formatting like \`\`\`json.
         Each object should have:
-        - title: String (Headline)
-        - description: String (2-3 sentences max)
+        - title: String (Headline in English)
+        - titleHindi: String (Headline accurately translated into Hindi using Devanagari script)
+        - description: String (2-3 sentences max in English)
+        - descriptionHindi: String (2-3 sentences max accurately translated into Hindi using Devanagari script)
         - category: String (Choose one: National, International, Economy, Science & Tech, Sports, Polity, Environment, Art & Culture, Education, Other)
         - icon: String (A relevant emoji)
         - important: Boolean (true if very major news)
         
-        Focus on factual accuracy.`;
+        Focus on factual accuracy and high quality Hindi translations.`;
 
         const completion = await anthropic.messages.create({
             model: "claude-3-haiku-20240307",
-            max_tokens: 1024,
+            max_tokens: 2048,
             messages: [{ role: "user", content: prompt }]
         });
 

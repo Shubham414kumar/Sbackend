@@ -53,19 +53,37 @@ exports.submitQuiz = async (req, res) => {
         let correctCount = 0;
         let incorrectCount = 0;
 
-        // Simple evaluation logic (assuming answers array matches questions array index for MVP simplicity)
-        // Real implementation would map by ID.
+        // Support for object mapping: { questionId: selectedOptionIndex }
+        // and legacy array of indices: [selectedOptionIndex, ...]
+        if (Array.isArray(answers)) {
+            answers.forEach((item, index) => {
+                let selectedOption = typeof item === 'object' && item !== null ? item.selectedOption : item;
+                let question = (typeof item === 'object' && item !== null && item.questionId)
+                    ? quiz.questions.id(item.questionId)
+                    : quiz.questions[index];
 
-        // For MVP, assume answers is an array of selected indices
-        answers.forEach((selectedOption, index) => {
-            if (selectedOption === quiz.questions[index].correctOption) {
-                score += quiz.questions[index].marks;
-                correctCount++;
-            } else if (selectedOption !== null && selectedOption !== -1) {
-                incorrectCount++;
-                // Negative marking logic could go here
+                if (question) {
+                    if (selectedOption === question.correctOption) {
+                        score += question.marks;
+                        correctCount++;
+                    } else if (selectedOption !== null && selectedOption !== -1 && selectedOption !== undefined) {
+                        incorrectCount++;
+                    }
+                }
+            });
+        } else if (typeof answers === 'object' && answers !== null) {
+            for (const [questionId, selectedOption] of Object.entries(answers)) {
+                const question = quiz.questions.id(questionId);
+                if (question) {
+                    if (selectedOption === question.correctOption) {
+                        score += question.marks;
+                        correctCount++;
+                    } else if (selectedOption !== null && selectedOption !== -1 && selectedOption !== undefined) {
+                        incorrectCount++;
+                    }
+                }
             }
-        });
+        }
 
         res.json({ score, totalMarks: quiz.totalMarks, correctCount, incorrectCount });
     } catch (err) {

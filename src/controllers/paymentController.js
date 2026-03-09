@@ -2,14 +2,21 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Order = require('../models/Order');
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder',
-});
+let razorpay;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+} else {
+    console.warn("⚠️ RAZORPAY KEYS MISSING. Payment features will fail.");
+}
 
 exports.createOrder = async (req, res) => {
     try {
         const { amount, currency = 'INR', receipt, courseId } = req.body;
+
+        if (!razorpay) return res.status(500).json({ message: 'Payment gateway not configured' });
 
         const options = {
             amount: amount * 100, // amount in smallest currency unit

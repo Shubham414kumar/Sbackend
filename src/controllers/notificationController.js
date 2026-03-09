@@ -94,8 +94,6 @@ exports.sendNotification = async (req, res) => {
             }
         }
 
-        res.json({ message: `Notifications sent to ${totalSent} devices`, sent: totalSent });
-
         // Log the notification to DB after pushing
         const logEntry = new NotificationLog({
             title,
@@ -106,6 +104,7 @@ exports.sendNotification = async (req, res) => {
         });
         await logEntry.save();
 
+        res.json({ message: `Notifications sent to ${totalSent} devices`, sent: totalSent });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

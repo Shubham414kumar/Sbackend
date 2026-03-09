@@ -248,7 +248,7 @@ exports.getAllUsers = async (req, res) => {
 exports.updateUserRole = async (req, res) => {
     try {
         const { role } = req.body;
-        if (!['user', 'admin'].includes(role)) {
+        if (!['student', 'admin'].includes(role)) {
             return res.status(400).json({ message: 'Invalid role' });
         }
         const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true }).select('-password');
@@ -290,11 +290,10 @@ exports.forgotPassword = async (req, res) => {
         user.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 30 minutes
         await user.save();
 
-        // In production, send email with reset link. For now, return token.
+        // In production, send email with reset link. For now, log the token.
+        console.log(`[DEV ONLY] Password reset token for ${email}: ${resetToken}`);
         res.json({
-            message: 'Password reset token generated. Use it within 30 minutes.',
-            resetToken,
-            note: 'In production, this token would be sent via email instead of returned in the response.'
+            message: 'Password reset instructions sent to your email.'
         });
     } catch (err) {
         console.error(err.message);

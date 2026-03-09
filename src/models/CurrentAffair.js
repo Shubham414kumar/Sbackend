@@ -10,9 +10,17 @@ const currentAffairSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    titleHindi: {
+        type: String,
+        required: false
+    },
     description: {
         type: String,
         required: true
+    },
+    descriptionHindi: {
+        type: String,
+        required: false
     },
     category: {
         type: String,

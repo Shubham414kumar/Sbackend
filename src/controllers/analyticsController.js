@@ -2,6 +2,8 @@ const User = require('../models/User');
 const Course = require('../models/Course');
 const Order = require('../models/Order');
 const Vacancy = require('../models/Vacancy');
+const NotificationLog = require('../models/NotificationLog');
+const PYQ = require('../models/PYQ');
 
 exports.getDashboardStats = async (req, res) => {
     try {
@@ -10,14 +12,15 @@ exports.getDashboardStats = async (req, res) => {
         const activeCourses = await Course.countDocuments();
 
         // Calculate Revenue from successful orders
-        const orders = await Order.find({ status: 'successful' });
+        const orders = await Order.find({ status: 'paid' });
         const revenue = orders.reduce((sum, order) => sum + (order.amount || 0), 0) / 100; // Assuming amount is in paise
 
         const activeVacancies = await Vacancy.countDocuments({ status: 'Active' });
 
-        // Placeholder for items not explicitly tracked yet
-        const notificationsSent = 150;
-        const pyqDownloads = 300;
+        // Fetch real analytics instead of placeholders
+        const notificationLogs = await NotificationLog.find();
+        const notificationsSent = notificationLogs.reduce((sum, log) => sum + (log.devices || 0), 0);
+        const pyqDownloads = await PYQ.countDocuments(); // Fallback to count since downloads aren't tracked yet
 
         // Exam Distribution (Aggregating users by examCategory)
         const examDistributionData = await User.aggregate([
