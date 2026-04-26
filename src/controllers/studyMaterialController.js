@@ -5,8 +5,17 @@ const PYQ = require('../models/PYQ');
 // --- Books ---
 exports.getBooks = async (req, res) => {
     try {
-        const { class: studentClass, subject } = req.query;
+        const { search, class: studentClass, subject } = req.query;
         let query = {};
+        
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { subject: { $regex: search, $options: 'i' } },
+                { author: { $regex: search, $options: 'i' } }
+            ];
+        }
+
         if (studentClass) query.class = studentClass;
         if (subject) query.subject = subject;
 
@@ -69,8 +78,17 @@ exports.deleteSyllabus = async (req, res) => {
 // --- PYQs ---
 exports.getPYQs = async (req, res) => {
     try {
-        const { exam, year } = req.query;
+        const { search, exam, year } = req.query;
         let query = {};
+
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { exam: { $regex: search, $options: 'i' } },
+                { subject: { $regex: search, $options: 'i' } }
+            ];
+        }
+
         if (exam) query.exam = exam;
         if (year) query.year = year;
 

@@ -52,6 +52,13 @@ const UserSchema = new mongoose.Schema({
     badges: [{ type: String }], // Array of badge IDs or names
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
+    bookmarks: [
+        {
+            id: { type: String, required: true },
+            type: { type: String, enum: ['course', 'vacancy', 'study'], required: true },
+            bookmarkedAt: { type: Date, default: Date.now }
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now,

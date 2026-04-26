@@ -17,6 +17,9 @@ const LessonSchema = new mongoose.Schema({
     pdfUrl: {
         type: String,
     },
+    assignmentUrl: {
+        type: String,
+    },
     duration: {
         type: String, // e.g., '45 mins'
     },

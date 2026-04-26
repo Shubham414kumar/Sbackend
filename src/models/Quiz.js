@@ -18,10 +18,19 @@ const QuizSchema = new mongoose.Schema({
     questions: [
         {
             questionText: { type: String, required: true },
-            options: [{ type: String, required: true }],
-            correctOption: { type: Number, required: true }, // Index 0-3
+            questionType: { 
+                type: String, 
+                enum: ['objective', 'subjective'], 
+                default: 'objective' 
+            },
+            // Objective fields
+            options: [{ type: String }],
+            correctOption: { type: Number }, // Index 0-3 for objective
+            // Common fields
             marks: { type: Number, default: 4 },
-            explanation: { type: String }
+            explanation: { type: String },
+            // Subjective fields
+            expectedAnswer: { type: String }, // Model answer for subjective
         }
     ],
     createdAt: { type: Date, default: Date.now }

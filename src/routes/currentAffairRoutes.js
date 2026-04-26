@@ -5,6 +5,6 @@ const auth = require('../middleware/authMiddleware');
 const admin = require('../middleware/adminMiddleware');
 
 router.get('/', getAffairs);
-router.post('/generate', auth, admin, generateDailyAffairs);
+router.post('/generate', auth, generateDailyAffairs);
 
 module.exports = router;

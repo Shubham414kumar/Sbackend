@@ -65,6 +65,7 @@ exports.sendNotification = async (req, res) => {
         const messages = pushTokens.map(token => ({
             to: token,
             sound: 'default',
+            channelId: 'default',
             title,
             body,
             data: { examCategory, alertType },
@@ -126,6 +127,23 @@ exports.deregisterToken = async (req, res) => {
         const { token } = req.body;
         await PushToken.findOneAndUpdate({ token }, { isActive: false });
         res.json({ message: 'Token deregistered' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// Get Notification Preferences
+exports.getPrefs = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const pushToken = await PushToken.findOne({ token, userId: req.user.id });
+        if (!pushToken) {
+            return res.status(404).json({ message: 'Token not found' });
+        }
+        res.json({
+            examCategories: pushToken.examCategories,
+            alertPrefs: pushToken.alertPrefs
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

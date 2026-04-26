@@ -19,7 +19,7 @@ const CourseSchema = new mongoose.Schema({
     },
     class: [{
         type: String,
-        enum: ['6', '7', '8', '9', '10', '11', '12', 'dropper'],
+        enum: ['All', '6', '7', '8', '9', '10', '11', '12', 'dropper', 'SSC', 'Banking'],
     }],
     instructor: {
         type: String,

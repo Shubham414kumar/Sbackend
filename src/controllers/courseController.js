@@ -4,7 +4,25 @@ const Lesson = require('../models/Lesson');
 // Get all courses
 exports.getCourses = async (req, res) => {
     try {
-        const courses = await Course.find();
+        const { search, category, class: classId } = req.query;
+        let query = {};
+
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { category: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        if (category && category !== 'All') {
+            query.category = category;
+        }
+
+        if (classId) {
+            query.class = classId;
+        }
+
+        const courses = await Course.find(query);
         res.json(courses);
     } catch (err) {
         res.status(500).json({ message: err.message });

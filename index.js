@@ -58,6 +58,7 @@ const { authLimiter } = require('./src/middleware/rateLimiter');
 app.use('/api/auth', authLimiter);
 
 app.use('/api/auth', require('./src/routes/authRoutes'));
+app.use('/api/search', require('./src/routes/searchRoutes'));
 app.use('/api/courses', require('./src/routes/courseRoutes'));
 app.use('/api/study', require('./src/routes/studyMaterialRoutes'));
 app.use('/api/quizzes', require('./src/routes/quizRoutes'));
@@ -72,6 +73,9 @@ app.use('/api/comments', require('./src/routes/commentRoutes'));
 app.use('/api/current-affairs', require('./src/routes/currentAffairRoutes'));
 app.use('/api/upload', require('./src/routes/uploadRoutes'));
 app.use('/api/analytics', require('./src/routes/analyticsRoutes'));
+app.use('/api/applications', require('./src/routes/applicationRoutes'));
+app.use('/api/notes', require('./src/routes/noteRoutes'));
+app.use('/api/study-plans', require('./src/routes/studyPlanRoutes'));
 app.get('/', (req, res) => {
   res.send('SaarthiPrep API is running');
 });

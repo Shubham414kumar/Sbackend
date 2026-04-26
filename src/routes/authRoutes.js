@@ -13,6 +13,8 @@ router.post('/reset-password', resetPassword);
 router.put('/change-password', auth, changePassword);
 router.get('/me', auth, getProfile);
 router.put('/profile', auth, updateProfile);
+router.get('/bookmarks', auth, require('../controllers/authController').getBookmarks);
+router.post('/bookmarks/toggle', auth, require('../controllers/authController').toggleBookmark);
 router.get('/users', auth, adminMiddleware, getAllUsers);
 router.put('/users/:id/role', auth, adminMiddleware, updateUserRole);
 router.delete('/users/:id', auth, adminMiddleware, deleteUser);

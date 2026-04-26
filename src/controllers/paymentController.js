@@ -82,3 +82,42 @@ exports.getAllOrders = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+exports.checkEnrollment = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const userId = req.user.id;
+
+        const order = await Order.findOne({
+            userId,
+            courseId,
+            status: 'paid'
+        });
+
+        res.json({ isEnrolled: !!order });
+    } catch (error) {
+        console.error('Check Enrollment Error:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+exports.getMyOrders = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const orders = await Order.find({ userId, status: 'paid' }).sort({ createdAt: -1 });
+        
+        const Course = require('../models/Course');
+        const courseIds = orders.map(o => o.courseId).filter(id => id && id !== 'premium_upgrade' && id !== 'unknown_course');
+        
+        // mongoose find by list of ObjectIds or strings (if schema uses String)
+        const courses = await Course.find({ _id: { $in: courseIds } });
+        
+        res.json({
+            orders,
+            courses
+        });
+    } catch (error) {
+        console.error('Fetch My Orders Error:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};

@@ -350,3 +350,40 @@ exports.changePassword = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+// --- Bookmarks ---
+exports.getBookmarks = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('bookmarks');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user.bookmarks || []);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+exports.toggleBookmark = async (req, res) => {
+    try {
+        const { id, type } = req.body;
+        if (!id || !type) return res.status(400).json({ message: 'ID and type are required' });
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const index = user.bookmarks.findIndex(b => b.id === id);
+        if (index > -1) {
+            // Remove bookmark
+            user.bookmarks.splice(index, 1);
+            await user.save();
+            return res.json({ message: 'Bookmark removed', bookmarks: user.bookmarks });
+        } else {
+            // Add bookmark
+            user.bookmarks.push({ id, type });
+            await user.save();
+            return res.json({ message: 'Bookmark added', bookmarks: user.bookmarks });
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

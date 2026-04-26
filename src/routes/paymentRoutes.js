@@ -7,5 +7,7 @@ const admin = require('../middleware/adminMiddleware');
 router.post('/create-order', protect, paymentController.createOrder);
 router.post('/verify', protect, paymentController.verifyPayment);
 router.get('/orders', protect, admin, paymentController.getAllOrders);
+router.get('/check-enrollment/:courseId', protect, paymentController.checkEnrollment);
+router.get('/my-orders', protect, paymentController.getMyOrders);
 
 module.exports = router;
