@@ -54,6 +54,6 @@ exports.askAI = async (req, res) => {
 
   } catch (err) {
     console.error("AI Error:", err);
-    res.status(500).json({ message: "Failed to get AI response. " + err.message });
+    res.status(500).json({ message: "Failed to get AI response. Please try again." });
   }
 };

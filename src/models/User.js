@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     },
     class: {
         type: String,
-        enum: ['6', '7', '8', '9', '10', '11', '12', 'dropper'],
+        enum: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'dropper', 'graduate', 'ssc', 'banking', 'railway', 'defence', 'teaching', 'upsc', 'state', 'engineering'],
         required: false,
     },
     examGoal: {
@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
     },
     examCategory: {
         type: String,
-        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET', 'Engineering (BEU)'],
+        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET', 'Engineering (BEU)', 'Foundations'],
         required: false,
     },
     branch: {

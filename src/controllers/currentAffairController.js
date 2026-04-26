@@ -16,7 +16,7 @@ const getAffairs = async (req, res) => {
         const affairs = await CurrentAffair.find(query).sort({ createdAt: -1 }); // Recently added first
         res.json(affairs);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -70,7 +70,7 @@ const generateDailyAffairs = async (req, res) => {
 
     } catch (error) {
         console.error("AI Generation Error:", error);
-        res.status(500).json({ message: 'Failed to generate current affairs', error: error.message });
+        res.status(500).json({ message: 'Failed to generate current affairs' });
     }
 };
 

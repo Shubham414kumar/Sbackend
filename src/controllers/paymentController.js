@@ -38,7 +38,7 @@ exports.createOrder = async (req, res) => {
         res.json(order);
     } catch (error) {
         console.error('Razorpay Error:', error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
@@ -68,7 +68,7 @@ exports.verifyPayment = async (req, res) => {
         }
     } catch (error) {
         console.error('Verification Error:', error);
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 exports.getAllOrders = async (req, res) => {
@@ -79,7 +79,7 @@ exports.getAllOrders = async (req, res) => {
         res.json(orders);
     } catch (error) {
         console.error('Fetch Orders Error:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -97,7 +97,7 @@ exports.checkEnrollment = async (req, res) => {
         res.json({ isEnrolled: !!order });
     } catch (error) {
         console.error('Check Enrollment Error:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -118,6 +118,6 @@ exports.getMyOrders = async (req, res) => {
         });
     } catch (error) {
         console.error('Fetch My Orders Error:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: 'Server error' });
     }
 };
