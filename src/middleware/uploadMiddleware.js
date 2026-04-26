@@ -23,7 +23,7 @@ const storage = new CloudinaryStorage({
             resourceType = 'video';
         } else if (file.mimetype === 'application/pdf') {
             folderName = 'saarthiprep/pdfs';
-            resourceType = 'image'; // Cloudinary treats PDF as images for storage API
+            resourceType = 'auto'; 
         } else if (file.mimetype.startsWith('image/')) {
             folderName = 'saarthiprep/images';
             resourceType = 'image';
