@@ -48,7 +48,7 @@ app.use('/api/auth', authLimiter);
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/search', require('./src/routes/searchRoutes'));
 app.use('/api/courses', require('./src/routes/courseRoutes'));
-app.use('/api/study', require('./src/routes/studyMaterialRoutes'));
+app.use('/api/study-materials', require('./src/routes/studyMaterialRoutes'));
 app.use('/api/quizzes', require('./src/routes/quizRoutes'));
 app.use('/api/gamification', require('./src/routes/gamificationRoutes'));
 app.use('/api/ai', require('./src/routes/aiRoutes'));
