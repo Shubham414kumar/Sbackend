@@ -5,7 +5,7 @@ const pushTokenSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
     examCategories: [{
         type: String,
-        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET'],
+        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET', 'Engineering (BEU)', 'Foundations', 'Technical Subject'],
     }],
     alertPrefs: {
         newVacancies: { type: Boolean, default: true },

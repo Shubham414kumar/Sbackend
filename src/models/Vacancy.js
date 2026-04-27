@@ -6,7 +6,7 @@ const vacancySchema = new mongoose.Schema({
     examCategory: {
         type: String,
         required: true,
-        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET', 'Engineering (BEU)'],
+        enum: ['SSC', 'Railway', 'Banking', 'Defence', 'Teaching', 'UPSC', 'State', 'JEE', 'NEET', 'CUET', 'Engineering (BEU)', 'Foundations', 'Technical Subject'],
     },
     lastDate: { type: Date, required: true },
     vacancies: { type: Number, default: 0 },
